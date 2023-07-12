@@ -1,0 +1,7 @@
+apiVersion: v2
+name: oidc-server
+description: Helm chart for deploying an OIDC Server in K8s
+type: application
+version: 0.1.0
+icon: "https://icons-for-free.com/iconfiles/png/512/helm+journey+ocean+sea+ship+trip+icon-1320195950085999788.png"
+appVersion: "0.1.0"
