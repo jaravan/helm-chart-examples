@@ -1,0 +1,15 @@
+apiVersion: v1
+entries:
+  oidc-server:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-07-14T00:57:39.64642+03:00"
+    description: Helm chart for deploying an OIDC Server in K8s
+    digest: 039add6c322042b1839a2444d4f284e119983315eb63229663db58b28bf88984
+    icon: https://icons-for-free.com/iconfiles/png/512/helm+journey+ocean+sea+ship+trip+icon-1320195950085999788.png
+    name: oidc-server
+    type: application
+    urls:
+    - https://github.com/jaravan/helm-chart-examples/releases/download/oidc-server-0.1.0/oidc-server-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-07-14T00:57:39.645713+03:00"
