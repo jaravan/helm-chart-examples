@@ -1,0 +1,10 @@
+apiVersion: v2
+name: smart-contract
+description: Helm chart for deploying Smart Contracts to an RPC blockchain node
+type: application
+icon: "https://icons-for-free.com/iconfiles/png/512/helm+journey+ocean+sea+ship+trip+icon-1320195950085999788.png"
+version: 0.1.0
+appVersion: "0.1.0"
+maintainers:
+  - name: jaravan
+    url: https://github.com/jaravan

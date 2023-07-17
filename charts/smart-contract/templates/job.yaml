@@ -1,0 +1,102 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "smart-contract.fullname" . }}
+  namespace: {{ template "smart-contract.namespace" . }}
+  annotations:
+    "checkov.io/skip1": CKV_K8S_38=ServiceAccountToken needs to be mounted in order for kubectl to communicate to K8S API
+  labels:
+    {{- include "smart-contract.labels" . | nindent 4 }}
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      # Use the ServiceAccount which has permissions to write to configMap
+      serviceAccountName: {{ include "smart-contract.fullname" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      restartPolicy: Never
+      initContainers:
+      - name: init
+        {{- if .Values.image.sha }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}@sha256:{{ .Values.image.sha }}"
+        {{- else }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        {{- end }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        args:
+        {{- range $arg := index (fromJson (include "smart-contract.argsArray" .)) "args" }}
+          - {{ $arg | quote }}
+        {{- end }}   
+        volumeMounts:
+          - name: smart-contracts-volume
+            mountPath: /contracts
+            # We mount a temporary volume in order to hand over data from init to main container
+          - name: container-shared-data
+            mountPath: /output
+      containers:
+      - name: write-configmap
+        {{- if .Values.kubectlImage.sha }}
+        image: "{{ .Values.kubectlImage.repository }}:{{ .Values.kubectlImage.tag }}@sha256:{{ .Values.kubectlImage.sha }}"
+        {{- else }}
+        image: "{{ .Values.kubectlImage.repository }}:{{ .Values.kubectlImage.tag }}"
+        {{- end }}
+        imagePullPolicy: {{ .Values.kubectlImage.pullPolicy }}
+        {{- with .Values.resources }}
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 65534
+          runAsGroup: 65534
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command:
+          - /bin/sh
+          - -c
+        args:
+          - |
+            echo "=======> Writing or updating ConfigMap {{ include "smart-contract.configMapNameSmartContractInfo" . }} ..."
+            kubectl create configmap {{ include "smart-contract.configMapNameSmartContractInfo" . }} \
+              --from-file=deployed=/container-shared-data/sc-info.json \
+              --dry-run=client -o yaml | kubectl apply -f -
+        volumeMounts:
+          - name: container-shared-data
+            mountPath: /container-shared-data
+      volumes:
+        - name: smart-contracts-volume
+          configMap:
+            name: sc-source-configmap
+            items:
+            {{- range .Values.smartContractFiles }}
+              - key: {{ .name }}
+                path: {{ .name }}
+            {{- end }}
+        - name: container-shared-data
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

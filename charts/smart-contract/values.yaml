@@ -1,0 +1,95 @@
+# Default values for smart-contract.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: docker.io/jaravan/deploy-sc
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "v0.1.0"
+
+kubectlImage:
+  # -- The repository of the container image which creates configmap and secret
+  repository: bitnami/kubectl
+  # -- Image Pull Policy
+  pullPolicy: Always
+  # -- The Tag of the image containing kubectl. Minor Version should match to your Kubernetes Cluster Version.
+  tag: "1.25.11"
+  # -- sha256 digest of the image.
+  # Do not add the prefix "@sha256:"
+  # <br/>
+  # Defaults to image digest for "bitnami/kubectl:1.21.14", see [https://hub.docker.com/layers/kubectl/bitnami/kubectl/1.21.14/images/sha256-f9814e1d2f1be7f7f09addd1d877090fe457d5b66ca2dcf9a311cf1e67168590?context=explore](https://hub.docker.com/layers/kubectl/bitnami/kubectl/1.21.14/images/sha256-f9814e1d2f1be7f7f09addd1d877090fe457d5b66ca2dcf9a311cf1e67168590?context=explore)
+  # <!-- # pragma: allowlist secret -->
+  sha: "9bd0d8cb7cd4c222ca17fcc3fb0c2aa533503df952f00b384da579c95a6cd380"  # pragma: allowlist secret
+
+args:
+  # Account private key to use for deploying the Smart Contracts (without the prefix '0x')
+  accountPrivateKey: "" 
+  # Blockchain node RPC URL
+  rpcURL: "http://quorum-rpc.quorum:8545"
+
+configMapNameSmartContractInfo: "sc-deployed-info"
+
+# Smart Contracts to deploy.
+smartContractFiles: []
+  # - name: "HelloWorld.sol"
+  #   sourceCode: |-
+  #     // SPDX-License-Identifier: MIT
+  #     // compiler version must be greater than or equal to 0.8.0 and less than 0.9.0
+  #     pragma solidity ^0.8.0;
+
+  #     contract HelloWorld {
+  #         string public greet = "Hello World!";
+  #     }
+  # - name: smartContract2.sol
+  #   sourceCode: |-
+  #     // Smart contract 2 source code goes here
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+# -- Override the deployment namespace.
+# Very useful for multi-namespace deployments in combined charts
+namespaceOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

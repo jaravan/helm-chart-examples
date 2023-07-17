@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "smart-contract.fullname" . }}
+  namespace: {{ template "smart-contract.namespace" . }}
+  annotations:
+    "description": "RoleBinding for SmartContracts deployment"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "smart-contract.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  namespace: {{ template "smart-contract.namespace" . }}
+  name: {{ include "smart-contract.fullname" . }}

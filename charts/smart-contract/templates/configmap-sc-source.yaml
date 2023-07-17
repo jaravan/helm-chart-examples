@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sc-source-configmap
+data:
+{{- range .Values.smartContractFiles }}
+  {{ .name }}: |
+{{ .sourceCode | indent 4 }}
+{{- end }}

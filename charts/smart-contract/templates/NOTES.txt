@@ -1,0 +1,3 @@
+1. Get the deployed Smart Contracts info by running these commands:
+kubectl describe cm --namespace {{ .Release.Namespace }} {{ .Values.configMapNameSmartContractInfo }}
+
