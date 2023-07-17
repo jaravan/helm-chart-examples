@@ -12,4 +12,19 @@ entries:
     urls:
     - https://github.com/jaravan/helm-chart-examples/releases/download/oidc-server-0.1.0/oidc-server-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-14T00:57:39.645713+03:00"
+  smart-contract:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-07-17T16:47:44.588241+03:00"
+    description: Helm chart for deploying Smart Contracts to an RPC blockchain node
+    digest: bf87b66597d4f5be904d3d900747fddaa3b572fc2851110e9bb04a7612cf2b06
+    icon: https://icons-for-free.com/iconfiles/png/512/helm+journey+ocean+sea+ship+trip+icon-1320195950085999788.png
+    maintainers:
+    - name: jaravan
+      url: https://github.com/jaravan
+    name: smart-contract
+    type: application
+    urls:
+    - https://github.com/jaravan/helm-chart-examples/releases/download/smart-contract-0.1.0/smart-contract-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-07-17T16:47:44.587829+03:00"
