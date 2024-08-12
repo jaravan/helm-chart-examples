@@ -8,3 +8,5 @@ helm upgrade --install oidcsrv oidc-server/ \
     --namespace=sso --create-namespace \
     --values sbx-oidc-config.yaml
 ```
+
+- http://localhost:3000/oidc/.well-known/openid-configuration
